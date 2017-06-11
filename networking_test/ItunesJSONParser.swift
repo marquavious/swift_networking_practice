@@ -10,13 +10,15 @@ import UIKit
 
 struct ItunesJSONParser {
     
+    let numberOfItemsBeingReturnedFromItunesJson = 25
+    
     enum ParseResult: Error {
         case sucessful
         case failure
     }
     
     private func startParser(completion: @escaping ([JSON],ParseResult?) -> ()){
-        let url = URL(string: "https://itunes.apple.com/us/rss/topmovies/limit=25/json")
+        let url = URL(string: "https://itunes.apple.com/us/rss/topmovies/limit=\(numberOfItemsBeingReturnedFromItunesJson)/json")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             if error != nil {
                 error?.throwCustomError(function: #function)
@@ -26,11 +28,14 @@ struct ItunesJSONParser {
             if let parsedData = try? JSONSerialization.jsonObject(with:data!) as! JSON {
                 guard let feed = parsedData["feed"] as? JSON else {return}
                 guard let entries = feed["entry"] as? [JSON] else {return}
-                completion(entries, .sucessful) }
-            }.resume()
+                completion(entries, .sucessful)
+            } else {
+                completion([], .failure)
+            }
+        }.resume()
     }
     
-    private func returnName(json:JSON) -> String{
+    private func returnName(json:JSON) -> String {
         // Probably not safe
         let nameDictionary = json["im:name"] as? JSON
         let name = nameDictionary?["label"] as? String
@@ -63,6 +68,7 @@ struct ItunesJSONParser {
         startParser { (json,error) in
             if error == .failure {
                 error?.throwCustomError(function: #function)
+                completion([], .failure)
                 return
             }
             for movieObject in json {
@@ -80,6 +86,7 @@ struct ItunesJSONParser {
         startParser { (json,error) in
             if error == .failure {
                 error?.throwCustomError(function: #function)
+                completion([:], .failure)
                 return
             }
             for movieObject in json {

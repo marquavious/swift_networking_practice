@@ -16,6 +16,7 @@
 		C0D15E311EEB796E007368EA /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D15E301EEB796E007368EA /* Movie.swift */; };
 		C0D15E331EEB79D5007368EA /* ItunesJSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D15E321EEB79D5007368EA /* ItunesJSONParser.swift */; };
 		C0D15E361EEB9FD7007368EA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D15E351EEB9FD7007368EA /* Extensions.swift */; };
+		C0D6906B1EECF819002F8660 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D6906A1EECF819002F8660 /* DateHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		C0D15E301EEB796E007368EA /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		C0D15E321EEB79D5007368EA /* ItunesJSONParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItunesJSONParser.swift; sourceTree = "<group>"; };
 		C0D15E351EEB9FD7007368EA /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		C0D6906A1EECF819002F8660 /* DateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				C0D15E2E1EEB7847007368EA /* DataSource.swift */,
 				C0D15E321EEB79D5007368EA /* ItunesJSONParser.swift */,
 				C0D15E351EEB9FD7007368EA /* Extensions.swift */,
+				C0D6906A1EECF819002F8660 /* DateHelper.swift */,
 				C0D15E201EEB2B87007368EA /* Main.storyboard */,
 				C0D15E231EEB2B87007368EA /* Assets.xcassets */,
 				C0D15E251EEB2B87007368EA /* LaunchScreen.storyboard */,
@@ -154,6 +157,7 @@
 				C0D15E1F1EEB2B87007368EA /* ViewController.swift in Sources */,
 				C0D15E311EEB796E007368EA /* Movie.swift in Sources */,
 				C0D15E1D1EEB2B87007368EA /* AppDelegate.swift in Sources */,
+				C0D6906B1EECF819002F8660 /* DateHelper.swift in Sources */,
 				C0D15E331EEB79D5007368EA /* ItunesJSONParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,6 +322,7 @@
 				C0D15E2D1EEB2B87007368EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

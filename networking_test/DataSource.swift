@@ -10,6 +10,11 @@ import UIKit
 
 typealias MovieDictionaryFormat = [String:[String:String]]
 
+enum UserDefautPaths:String{
+    case movieTitle = "movieTitle"
+    case moviePhotoUrl = "moviePhotoUrl"
+}
+
 class DataSource {
     
     static let sharedInstance = DataSource()
@@ -23,9 +28,24 @@ class DataSource {
             for movieObject in movies {
                 movieDictionary[movieObject.title] = ["movieTitle":movieObject.title,"moviePhotoUrl":movieObject.photoUrl]
             }
+            let date = Date()
             UserDefaults.standard.set(movieDictionary, forKey: "movie_dictionary")
+            UserDefaults.standard.set(date, forKey: "information_last_updated")
             UserDefaults.standard.synchronize()
             completion()
+        }
+    }
+    
+    // Chech time for update "Updates every 5 minutes"
+    func checkDateToUpdateJSON(){
+        DispatchQueue.global(qos:.background).async {
+            let date = Date()
+            let lastUpdatedDate = UserDefaults.standard.object(forKey: "information_last_updated") as! Date
+            let pastTime = date.timeIntervalSince(lastUpdatedDate)/60
+            if pastTime > 2.0 {
+                self.updateUserDefaults(completion: {
+                })
+            }
         }
     }
     
@@ -43,7 +63,7 @@ class DataSource {
     }
     
     // Update UserDefauts
-    func updateUserDefaults(completion: @escaping () -> ()?){
+    func updateUserDefaults(completion: @escaping () -> ()){
         UserDefaults.standard.removeObject(forKey: "movie_dictionary")
         grabInformationAndSaveItToUserDefaults {
             completion()
@@ -64,13 +84,13 @@ class DataSource {
         }
     }
     
-    // Converts
+    // Converts from MovieDictionaryFormat to Movie Objects
     private func convertMoviesFromDictionaryToMovieObjects(moviesJson:MovieDictionaryFormat,completion: @escaping ([Movie]) -> ()){
         var arrayOfMovies = [Movie]()
         for movie in moviesJson {
             let movieObject = Movie()
-            movieObject.title = movie.value["title"]!
-            movieObject.photoUrl = movie.value["photoUrl"]!
+            movieObject.title = movie.value["movieTitle"]!
+            movieObject.photoUrl = movie.value["moviePhotoUrl"]!
             arrayOfMovies.append(movieObject)
         }
         completion(arrayOfMovies)
