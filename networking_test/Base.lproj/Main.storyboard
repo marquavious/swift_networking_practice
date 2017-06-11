@@ -22,18 +22,7 @@
                             <outlet property="delegate" destination="uHv-pV-HMN" id="mXY-4a-ACN"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Movies" id="Ero-lf-YHD">
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="DU7-jU-WNx">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jcg-6F-dLe">
-                                <rect key="frame" x="276" y="7" width="83" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Update"/>
-                            </button>
-                            <connections>
-                                <action selector="updateButtonPressed:" destination="uHv-pV-HMN" id="WbQ-YZ-roR"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Movies" id="Ero-lf-YHD"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MOk-ol-FPO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

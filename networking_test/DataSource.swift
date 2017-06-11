@@ -37,12 +37,12 @@ class DataSource {
     }
     
     // Chech time for update "Updates every 5 minutes"
-    func checkDateToUpdateJSON(){
+    func checkDateToUpdateJSON(_ time:Double){
         DispatchQueue.global(qos:.background).async {
             let date = Date()
             let lastUpdatedDate = UserDefaults.standard.object(forKey: "information_last_updated") as! Date
             let pastTime = date.timeIntervalSince(lastUpdatedDate)/60
-            if pastTime > 2.0 {
+            if pastTime > time {
                 self.updateUserDefaults(completion: {
                 })
             }
@@ -64,7 +64,7 @@ class DataSource {
     
     // Update UserDefauts
     func updateUserDefaults(completion: @escaping () -> ()){
-        UserDefaults.standard.removeObject(forKey: "movie_dictionary")
+//        UserDefaults.standard.removeObject(forKey: "movie_dictionary")
         grabInformationAndSaveItToUserDefaults {
             completion()
         }

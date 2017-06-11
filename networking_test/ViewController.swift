@@ -9,6 +9,7 @@
 import UIKit
 
 typealias JSON = [String:Any]
+var refresher: UIRefreshControl!
 
 class ViewController: UITableViewController {
     
@@ -20,8 +21,13 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
         grabMovies()
         createActivitySpinner()
-        setUpTopRightButton()
         showPrompt()
+        refresher = UIRefreshControl()
+        let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
+        let string = "Movies were last updated at \(DateHelper.dateToString(date: time as! Date))"
+        refresher.attributedTitle = NSAttributedString(string: string)
+        tableView.addSubview(refresher)
+        refresher.addTarget(self, action: #selector(updateButtonPressed), for: .valueChanged)
     }
     
     func setUpTopRightButton(){
@@ -47,22 +53,36 @@ class ViewController: UITableViewController {
     }
     
     func showLastUpdatedPrompt(completion:@escaping () -> ()){
+//        activityIndicator.isHidden = true
         let delayInSeconds = 3.0 // 1
         DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) { // 2
             let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
-            let string = "Movies were last updated \(DateHelper.dateToString(date: time as! Date))"
+            let string = "Movies were last updated at \(DateHelper.dateToString(date: time as! Date))"
             self.navigationItem.prompt = string
+            refresher.endRefreshing()
             completion()
         }
     }
     
+//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+////        print(scrollView.contentOffset.y)
+////        if scrollView.contentOffset.y < -64.0{
+////            activityIndicator.isHidden = true
+////        } else {
+////            activityIndicator.isHidden = false
+////        }
+//    }
+    
     func updateButtonPressed() {
         self.activityIndicator.startAnimating()
-        self.navigationItem.prompt = "Updating..."
+        refresher.attributedTitle = NSAttributedString(string: "Updating Movies...")
         DataSource.sharedInstance.updateUserDefaults {
             self.activityIndicator.stopAnimating()
             self.showPrompt()
             self.grabMovies()
+            let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
+            let string = "Movies were last updated at \(DateHelper.dateToString(date: time as! Date))"
+            refresher.attributedTitle = NSAttributedString(string: string)
         }
     }
     
