@@ -22,17 +22,20 @@ class DataSource {
     var itunesJSONParser = ItunesJSONParser()
     
     // Fetch song from database and save it in NSUserdefaults
-    func grabInformationAndSaveItToUserDefaults(completion: @escaping () -> ()){
+    func grabInformationAndSaveItToUserDefaults(completion: @escaping (ItunesJSONParser.ParseResult) -> ()){
         itunesJSONParser.createAndReturnMovieObjects { (movies, error) in
+            if error == .failure{
+                completion(.failure)
+            }
+            
             var movieDictionary = MovieDictionaryFormat()
             for movieObject in movies {
                 movieDictionary[movieObject.title] = ["movieTitle":movieObject.title,"moviePhotoUrl":movieObject.photoUrl]
             }
-            let date = Date()
             UserDefaults.standard.set(movieDictionary, forKey: "movie_dictionary")
-            UserDefaults.standard.set(date, forKey: "information_last_updated")
+            UserDefaults.standard.set(Date(), forKey: "information_last_updated")
             UserDefaults.standard.synchronize()
-            completion()
+            completion(.sucessful)
         }
     }
     
@@ -40,10 +43,16 @@ class DataSource {
     func checkDateToUpdateJSON(_ time:Double){
         DispatchQueue.global(qos:.background).async {
             let date = Date()
-            let lastUpdatedDate = UserDefaults.standard.object(forKey: "information_last_updated") as! Date
-            let pastTime = date.timeIntervalSince(lastUpdatedDate)/60
+            let lastUpdatedDate = UserDefaults.standard.object(forKey: "information_last_updated")
+            if lastUpdatedDate == nil {
+                UserDefaults.standard.set(date, forKey: "information_last_updated")
+                UserDefaults.standard.synchronize()
+            }
+            guard let lastUpdatedDateAsDate = UserDefaults.standard.object(forKey: "information_last_updated") as? Date else {return}
+            let pastTime = date.timeIntervalSince(lastUpdatedDateAsDate)/60
             if pastTime > time {
-                self.updateUserDefaults(completion: {
+                self.updateUserDefaults(completion: { (result) in
+                    
                 })
             }
         }
@@ -56,30 +65,41 @@ class DataSource {
     
     // Check to see if movies are in NSUser Defaults
     func isMoviesInUserDefaults() -> Bool {
-        if UserDefaults.standard.value(forKey: "movie_dictionary") != nil{
+        guard (UserDefaults.standard.value(forKey: "movie_dictionary") != nil) else {
+            return false
+        }
+        let unwrappedMovies = UserDefaults.standard.value(forKey: "movie_dictionary") as! MovieDictionaryFormat
+        if unwrappedMovies.count > 5 {
             return true
         }
         return false
     }
     
     // Update UserDefauts
-    func updateUserDefaults(completion: @escaping () -> ()){
-//        UserDefaults.standard.removeObject(forKey: "movie_dictionary")
-        grabInformationAndSaveItToUserDefaults {
-            completion()
+    func updateUserDefaults(completion: @escaping (ItunesJSONParser.ParseResult) -> ()){
+        grabInformationAndSaveItToUserDefaults {(error) in
+            if error == .failure {
+                completion(.failure)
+            }
+            completion(.sucessful)
         }
     }
     
     // Return array of movies
-    func returnMovies(completion: @escaping ([Movie]) -> ()){
+    func returnMovies(completion: @escaping ([Movie], ItunesJSONParser.ParseResult?) -> ()){
         if isMoviesInUserDefaults(){
+            
             let moveisAnyObject = grabInformationFromUserDefaults() as! MovieDictionaryFormat
+            
             convertMoviesFromDictionaryToMovieObjects(moviesJson: moveisAnyObject, completion: { (movies) in
-                completion(movies)
+                completion(movies, .sucessful)
             })
         } else {
             itunesJSONParser.createAndReturnMovieObjects(completion: { (movies, result) in
-                
+                if result == .failure {
+                    completion(movies, .failure)
+                }
+                completion(movies, .sucessful)
             })
         }
     }
@@ -89,6 +109,7 @@ class DataSource {
         var arrayOfMovies = [Movie]()
         for movie in moviesJson {
             let movieObject = Movie()
+            
             movieObject.title = movie.value["movieTitle"]!
             movieObject.photoUrl = movie.value["moviePhotoUrl"]!
             arrayOfMovies.append(movieObject)

@@ -23,21 +23,19 @@ class ViewController: UITableViewController {
         createActivitySpinner()
         showPrompt()
         refresher = UIRefreshControl()
-        let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
-        let string = "Movies were last updated at \(DateHelper.dateToString(date: time as! Date))"
-        refresher.attributedTitle = NSAttributedString(string: string)
-        tableView.addSubview(refresher)
+        refresher.attributedTitle = NSAttributedString(string: self.returnLastDateUpdated())
+        tableView.insertSubview(refresher, at: 0)
         refresher.addTarget(self, action: #selector(updateButtonPressed), for: .valueChanged)
     }
     
-    func setUpTopRightButton(){
-        let btn1 = UIButton(type: .system)
-        btn1.setTitle("Update", for: .normal)
-        btn1.frame = CGRect(x: 0, y: 0, width: 75, height: 30)
-        btn1.addTarget(self, action: #selector(updateButtonPressed), for: .touchUpInside)
-        let item1 = UIBarButtonItem(customView: btn1)
-        self.navigationItem.setRightBarButtonItems([item1], animated: true)
-    }
+//    func setUpTopRightButton(){
+//        let btn1 = UIButton(type: .system)
+//        btn1.setTitle("Update", for: .normal)
+//        btn1.frame = CGRect(x: 0, y: 0, width: 75, height: 30)
+//        btn1.addTarget(self, action: #selector(updateButtonPressed), for: .touchUpInside)
+//        let item1 = UIBarButtonItem(customView: btn1)
+//        self.navigationItem.setRightBarButtonItems([item1], animated: true)
+//    }
     
     func showPrompt(){
         showLastUpdatedPrompt {
@@ -53,36 +51,39 @@ class ViewController: UITableViewController {
     }
     
     func showLastUpdatedPrompt(completion:@escaping () -> ()){
-//        activityIndicator.isHidden = true
+        //        activityIndicator.isHidden = true
         let delayInSeconds = 3.0 // 1
         DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) { // 2
-            let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
-            let string = "Movies were last updated at \(DateHelper.dateToString(date: time as! Date))"
-            self.navigationItem.prompt = string
+            self.navigationItem.prompt = self.returnLastDateUpdated()
             refresher.endRefreshing()
             completion()
         }
     }
     
-//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-////        print(scrollView.contentOffset.y)
-////        if scrollView.contentOffset.y < -64.0{
-////            activityIndicator.isHidden = true
-////        } else {
-////            activityIndicator.isHidden = false
-////        }
-//    }
-    
     func updateButtonPressed() {
         self.activityIndicator.startAnimating()
         refresher.attributedTitle = NSAttributedString(string: "Updating Movies...")
-        DataSource.sharedInstance.updateUserDefaults {
+        DataSource.sharedInstance.updateUserDefaults { (error) in
+            if error == .failure{
+                DispatchQueue.global(qos: .userInitiated).async {
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        self.refreshControl?.endRefreshing()
+                    }
+                }
+                
+                let alert = UIAlertController(title: "Error", message: "Couldnt connect to the server. Please check your internet connection.", preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: {
+                    return
+                })
+            }
+            
             self.activityIndicator.stopAnimating()
             self.showPrompt()
             self.grabMovies()
-            let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
-            let string = "Movies were last updated at \(DateHelper.dateToString(date: time as! Date))"
-            refresher.attributedTitle = NSAttributedString(string: string)
+            refresher.attributedTitle = NSAttributedString(string: self.returnLastDateUpdated())
         }
     }
     
@@ -94,12 +95,44 @@ class ViewController: UITableViewController {
     }
     
     func grabMovies(){
-        DataSource.sharedInstance.returnMovies {(movies) in
-            self.activityIndicator.startAnimating()
+        self.activityIndicator.startAnimating()
+        DataSource.sharedInstance.returnMovies {(movies, error) in
+            
+            if error == .failure{
+                DispatchQueue.global(qos: .userInitiated).async {
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        self.refreshControl?.endRefreshing()
+                    }
+                }
+                
+                let alert = UIAlertController(title: "Error", message: "Couldnt connect to the server. Please check your internet connection.", preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: {
+                    
+                    return
+                })
+            }
             self.movieArray = movies
             self.tableView.reloadData()
             self.activityIndicator.stopAnimating()
+            self.activityIndicator.isHidden = true
+            self.refreshControl?.endRefreshing()
+
         }
+        self.tableView.reloadData()
+    }
+    
+    func returnLastDateUpdated() -> String {
+
+        if tableView.numberOfRows(inSection: 0) < 1{
+            return "Movies were never updated :("
+        }
+    
+        let time = (UserDefaults.standard.object(forKey: "information_last_updated")!)
+        let string = "Movies were last updated \(DateHelper.dateToString(date: time as! Date))"
+        return string
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

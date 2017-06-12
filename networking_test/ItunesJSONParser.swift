@@ -10,15 +10,13 @@ import UIKit
 
 struct ItunesJSONParser {
     
-    let numberOfItemsBeingReturnedFromItunesJson = 25
-    
     enum ParseResult: Error {
         case sucessful
         case failure
     }
     
     private func startParser(completion: @escaping ([JSON],ParseResult?) -> ()){
-        let url = URL(string: "https://itunes.apple.com/us/rss/topmovies/limit=\(numberOfItemsBeingReturnedFromItunesJson)/json")
+        let url = URL(string: "https://itunes.apple.com/us/rss/topvideorentals/limit=25/json")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             if error != nil {
                 error?.throwCustomError(function: #function)
