@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C0C842ED1EF5CC6600C3D63B /* Contstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C842EC1EF5CC6600C3D63B /* Contstants.swift */; };
 		C0D15E1D1EEB2B87007368EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D15E1C1EEB2B87007368EA /* AppDelegate.swift */; };
 		C0D15E1F1EEB2B87007368EA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D15E1E1EEB2B87007368EA /* ViewController.swift */; };
 		C0D15E221EEB2B87007368EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0D15E201EEB2B87007368EA /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C0C842EC1EF5CC6600C3D63B /* Contstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contstants.swift; sourceTree = "<group>"; };
 		C0D15E191EEB2B87007368EA /* networking_test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = networking_test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0D15E1C1EEB2B87007368EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0D15E1E1EEB2B87007368EA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -64,10 +66,11 @@
 		C0D15E1B1EEB2B87007368EA /* networking_test */ = {
 			isa = PBXGroup;
 			children = (
-				C0D15E301EEB796E007368EA /* Movie.swift */,
 				C0D15E1C1EEB2B87007368EA /* AppDelegate.swift */,
+				C0D15E301EEB796E007368EA /* Movie.swift */,
 				C0D15E1E1EEB2B87007368EA /* ViewController.swift */,
 				C0D15E2E1EEB7847007368EA /* DataSource.swift */,
+				C0C842EC1EF5CC6600C3D63B /* Contstants.swift */,
 				C0D15E321EEB79D5007368EA /* ItunesJSONParser.swift */,
 				C0D15E351EEB9FD7007368EA /* Extensions.swift */,
 				C0D6906A1EECF819002F8660 /* DateHelper.swift */,
@@ -156,6 +159,7 @@
 				C0D15E361EEB9FD7007368EA /* Extensions.swift in Sources */,
 				C0D15E1F1EEB2B87007368EA /* ViewController.swift in Sources */,
 				C0D15E311EEB796E007368EA /* Movie.swift in Sources */,
+				C0C842ED1EF5CC6600C3D63B /* Contstants.swift in Sources */,
 				C0D15E1D1EEB2B87007368EA /* AppDelegate.swift in Sources */,
 				C0D6906B1EECF819002F8660 /* DateHelper.swift in Sources */,
 				C0D15E331EEB79D5007368EA /* ItunesJSONParser.swift in Sources */,

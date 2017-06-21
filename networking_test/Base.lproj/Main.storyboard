@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3K1-kd-ndO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3K1-kd-ndO">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Movies-->
+        <!--Top Itunes Rentals-->
         <scene sceneID="huR-Uj-mKl">
             <objects>
                 <tableViewController id="uHv-pV-HMN" customClass="ViewController" customModule="networking_test" customModuleProvider="target" sceneMemberID="viewController">
@@ -23,7 +23,7 @@
                             <outlet property="delegate" destination="uHv-pV-HMN" id="mXY-4a-ACN"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Movies" id="Ero-lf-YHD"/>
+                    <navigationItem key="navigationItem" title="Top Itunes Rentals" id="Ero-lf-YHD"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MOk-ol-FPO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

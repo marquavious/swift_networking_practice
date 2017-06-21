@@ -12,5 +12,6 @@ class Movie: NSObject {
     
     var title:String!
     var photoUrl: String!
+    var entryNumber: Int!
 
 }

@@ -10,90 +10,98 @@ import UIKit
 
 struct ItunesJSONParser {
     
-    enum ParseResult: Error {
-        case sucessful
-        case failure
-    }
-    
-    private func startParser(completion: @escaping ([JSON],ParseResult?) -> ()){
+    static private func grabItunesData(completion: @escaping ([JSON],Error?) -> ()){
         let url = URL(string: "https://itunes.apple.com/us/rss/topvideorentals/limit=25/json")
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        config.urlCache = nil
+        let urlSession = URLSession(configuration: config)
+        
+        urlSession.dataTask(with: url!) { (data, response, error) in
             if error != nil {
                 error?.throwCustomError(function: #function)
-                completion([], .failure)
+                completion([],error)
                 return
             }
             if let parsedData = try? JSONSerialization.jsonObject(with:data!) as! JSON {
                 guard let feed = parsedData["feed"] as? JSON else {return}
                 guard let entries = feed["entry"] as? [JSON] else {return}
-                completion(entries, .sucessful)
+                completion(entries,error)
             } else {
-                completion([], .failure)
+                completion([],error)
             }
-        }.resume()
+            }.resume()
     }
     
-    private func returnName(json:JSON) -> String {
-        // Probably not safe
+    static private func returnName(json:JSON) -> String {
+        // Probably not safe....
         let nameDictionary = json["im:name"] as? JSON
         let name = nameDictionary?["label"] as? String
         return name ?? "Error finding \"im:name\" in JSON"
     }
     
-    private func returnPhoto(json:JSON) -> String {
-        // Probably not safe again
+    static private func returnPhoto(json:JSON) -> String {
+        // Probably not safe again :(
         let pictureDirectory = json["im:image"] as? [JSON]
         let photoUrl = pictureDirectory?[0]["label"] as? String
         return photoUrl ?? "Error finding \"im:image\" in JSON"
     }
     
-    func returnMovieNames(completion: @escaping ([String],ParseResult?) -> ()){
+    static func createAndReturnMovieObjects(completion: @escaping ([Movie],Error?) -> ()){
+        var movieArray = [Movie]()
+        var iterations:Int = 0
+        grabItunesData { (json,error) in
+            if error != nil {
+                error?.throwCustomError(function: #function)
+                completion([],error)
+                return
+            }
+            for movieObject in json {
+                let movie = Movie()
+                movie.title = self.returnName(json: movieObject)
+                movie.photoUrl = self.returnPhoto(json: movieObject)
+                movie.entryNumber = iterations
+                movieArray.append(movie)
+                iterations += 1
+            }
+            completion(movieArray,error)
+        }
+    }
+    
+    //MARK: - USELESS FUNCTIONS
+    
+    static func createAndReturnMovieDictionary(completion: @escaping (MovieDictionaryFormat,Error?) -> ()){
+        var movieDictionary = MovieDictionaryFormat()
+        var iterations:Int = 0
+        grabItunesData { (json,error) in
+            if error != nil {
+                error?.throwCustomError(function: #function)
+                completion([:], error)
+                return
+            }
+            for movieObject in json {
+                let movie = Movie()
+                movie.entryNumber = iterations
+                movie.title = self.returnName(json: movieObject)
+                movie.photoUrl = self.returnPhoto(json: movieObject)
+                movieDictionary[movie.title] = ["movieTitle":movie.title,"photoUrl":movie.photoUrl,"entryNumber":iterations]
+                iterations += 1
+            }
+            completion(movieDictionary, error)
+        }
+    }
+    
+    static func returnMovieNames(completion: @escaping ([String],Error?) -> ()){
         var stringArray = [String]()
-        startParser { (json, error) in
-            if error == .failure {
+        grabItunesData { (json, error) in
+            if error != nil {
                 error?.throwCustomError(function: #function)
                 return
             }
             for movieObject in json {
                 stringArray.append(self.returnName(json: movieObject))
             }
-            completion(stringArray,.sucessful)
-        }
-    }
-    
-    func createAndReturnMovieObjects(completion: @escaping ([Movie],ParseResult?) -> ()){
-        var movieArray = [Movie]()
-        startParser { (json,error) in
-            if error == .failure {
-                error?.throwCustomError(function: #function)
-                completion([], .failure)
-                return
-            }
-            for movieObject in json {
-                let movie = Movie()
-                movie.title = self.returnName(json: movieObject)
-                movie.photoUrl = self.returnPhoto(json: movieObject)
-                movieArray.append(movie)
-            }
-            completion(movieArray, .sucessful)
-        }
-    }
-    
-    func createAndReturnMovieDictionary(completion: @escaping (MovieDictionaryFormat,ParseResult?) -> ()){
-        var movieDictionary = MovieDictionaryFormat()
-        startParser { (json,error) in
-            if error == .failure {
-                error?.throwCustomError(function: #function)
-                completion([:], .failure)
-                return
-            }
-            for movieObject in json {
-                let movie = Movie()
-                movie.title = self.returnName(json: movieObject)
-                movie.photoUrl = self.returnPhoto(json: movieObject)
-                movieDictionary[movie.title] = ["movieTitle":movie.title,"photoUrl":movie.photoUrl]
-            }
-            completion(movieDictionary, .sucessful)
+            completion(stringArray,error)
         }
     }
 }

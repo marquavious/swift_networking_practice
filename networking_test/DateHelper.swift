@@ -36,7 +36,6 @@ class DateHelper {
         return returnString
     }
 
-    
     static func dateToString(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
@@ -44,7 +43,6 @@ class DateHelper {
         let returnString = dateFormatter.string(from: dateToFormat)
         return returnString
     }
-    
     
     static func fullDateToString(date: Date) -> String {
         let dateFormatter = DateFormatter()
