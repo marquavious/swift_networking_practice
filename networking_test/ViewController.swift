@@ -27,6 +27,10 @@ class ViewController: UITableViewController {
         grabMovies()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        refresher.attributedTitle = NSAttributedString(string: returnLastDateUpdated())
+    }
+    
     func setUpTopLeftButton(){
         let barButton = UIBarButtonItem(customView: activityIndicator)
         activityIndicator.activityIndicatorViewStyle = .gray
