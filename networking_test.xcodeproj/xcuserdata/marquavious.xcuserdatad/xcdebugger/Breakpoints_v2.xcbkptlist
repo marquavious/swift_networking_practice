@@ -13,5 +13,53 @@
             stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "networking_test/DataSource.swift"
+            timestampString = "519787690.557528"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "checkDateToUpdateJSON(_:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "networking_test.DataManager.(checkDateToUpdateJSON (Swift.Double) -&gt; ()).(closure #1)"
+                  moduleName = "networking_test"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marquavious/Developer/swift/networking_test/networking_test/DataSource.swift"
+                  timestampString = "519787691.535198"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "1984">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "networking_test.DataManager.(checkDateToUpdateJSON (Swift.Double) -&gt; ()).(closure #1).(closure #1)"
+                  moduleName = "networking_test"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marquavious/Developer/swift/networking_test/networking_test/DataSource.swift"
+                  timestampString = "519787691.536757"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "16">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

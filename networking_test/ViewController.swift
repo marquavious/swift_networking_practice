@@ -25,10 +25,7 @@ class ViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         grabMovies()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        refresher.attributedTitle = NSAttributedString(string: returnLastDateUpdated())
+        DataManager.sharedInstance.checkDateToUpdateJSON(10)
     }
     
     func setUpTopLeftButton(){
@@ -51,7 +48,7 @@ class ViewController: UITableViewController {
     
     func createRefresher(){
         refresher.addTarget(self, action: #selector(grabMovies), for: .valueChanged)
-        refresher.attributedTitle = NSAttributedString(string: returnLastDateUpdated())
+//        refresher.attributedTitle = NSAttributedString(string: returnLastDateUpdated())
         refresher.backgroundColor = .white
         tableView.addSubview(refresher)
     }
@@ -78,7 +75,6 @@ class ViewController: UITableViewController {
             self.refreshRefresher()
             
         }
-        
     }
     
     func refreshRefresher(){
@@ -90,17 +86,24 @@ class ViewController: UITableViewController {
             if (self.refresher.isRefreshing) {
                 self.refresher.endRefreshing()
             }
-            self.refresher.attributedTitle = NSAttributedString(string: (self.returnLastDateUpdated()))
+//            self.refresher.attributedTitle = NSAttributedString(string: (self.returnLastDateUpdated()))
         }
     }
     
     func returnLastDateUpdated() -> String {
         guard let time = UserDefaults.standard.object(forKey: "information_last_updated") else {
-            return "Movies were never updated :("
+            return "Movies not updated :("
         }
         
         let string = "Movies were last updated \(DateHelper.dateToString(date: time as! Date))"
         return string
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let alert = UIAlertController(title: "Last Time Updated", message: self.returnLastDateUpdated(), preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion:nil)
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
